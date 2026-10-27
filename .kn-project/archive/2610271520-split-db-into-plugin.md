@@ -1,6 +1,6 @@
-# 2610281520 - split-db-into-plugin
+# 2610271520 - split-db-into-plugin
 
-- Created: 2026-10-28 15:20 / Archived: 2026-10-28 18:30
+- Created: 2026-10-27 15:20 / Archived: 2026-10-27 18:30
 - Issue: Aqutter/aqutter-plugin-sqlite-drift#1
 - Milestone: N/A / Base Branch: main
 
@@ -8,7 +8,7 @@
 新的官方 plugin `aqutter-plugin-sqlite-drift`（plugin id `sqlite`）：Dart 端以 drift 提供 SQLite 的 raw SQL 執行器（`sqlite.open`、`sqlite.exec`，每個資料庫一條序列化連線加一個佇列，BLOB 直接傳二進位），網頁端提供 Kysely dialect `AqutterSqliteDialect`。Android 與 Windows 實機驗證通過（BLOB 1MB 來回內容一致、交易、50 個同時 insert 依序）。
 
 ## Cross-Repo Scope
-- 共用計畫 ID `2610281520-split-db-into-plugin`、共用分支名 `feature/2610281520-split-db-into-plugin`。
+- 共用計畫 ID `2610271520-split-db-into-plugin`、共用分支名 `feature/2610281520-split-db-into-plugin`。
 - `Aqutter/aqutter-plugin-sqlite-drift`（新 repo，`#1`，契約正本）：Dart `SqliteDriftPlugin` 與網頁端 `AqutterSqliteDialect`。
 - `Aqutter/aqutter-nuxt-app`（`#6`）：改用 plugin。
 - `Aqutter/aqutter`（`#24`）：移除內建 DB handler 與 `drift`／`sqlite3` 依賴。
@@ -25,11 +25,12 @@
 - **[Q4]** dialect 匯出名稱 `AqutterSqliteDialect`。
 - **[Q5]** 統一傳輸合併後才開工（已合併）。
 - **[Q6]** plugin id `sqlite`，與套件名分開：契約與實作分離，日後換其他實作可沿用同一個 id 與契約。
-- **[契約]** rev 1 凍結（2026-10-28）；每個資料庫一條序列化連線加一個佇列，同一資料庫的語句依收到順序執行。
+- **[契約]** rev 1 凍結（2026-10-27）；每個資料庫一條序列化連線加一個佇列，同一資料庫的語句依收到順序執行。
 - **[執行模式]** 序列。
 - **[完成後]** commit + 開 PR（併回 `main`）。
 
 ## Deviations
+- 計畫 ID 與日期更正：原 `2610281520`（誤用 2026-10-28，機器日期是 2026-10-27）更正為 `2610271520`；GitHub 上實際存在過的分支名（`feature/2610281520-split-db-into-plugin`）、PR 與 issue 留言維持原樣。
 - 無契約變更。
 - 範本專案的 `pubspec.lock` 把殼與 core 鎖在很舊的提交；實機驗證時發現新舊版本混用會讓傳輸連不上（WebSocket 403，頁面卡在載入畫面）。範本專案因此一併更新 `package.json` 的 client 與 `pubspec.lock`（等同 `aqutter upgrade` 做的事）。
 - 範本專案與 plugin 的 `package.json` 目前指向 plugin 的功能分支；plugin 合併後要改成不帶分支的 `github:Aqutter/aqutter-plugin-sqlite-drift`。

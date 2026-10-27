@@ -1,42 +1,39 @@
-import 'dart:async';
-
 import 'package:aqutter/aqutter.dart';
-import 'package:flutter/widgets.dart';
 
-/// `sqlite` plugin 的 Dart 端。
+import 'sqlite_drift_manager.dart';
+
+/// `sqlite` plugin 的 Dart 端：以 drift 提供 SQLite 資料庫的 raw SQL 執行器。
 ///
-/// 網頁端經 `callPlugin('sqlite', 'ping', …)` 呼叫 [handlers]；
-/// 本類別也示範主動對網頁派送事件（[attach]）與疊 UI（[buildOverlay]）。
+/// 網頁端經 `callPlugin('sqlite', 'open' | 'exec', …)`（通常由 Kysely dialect 代勞）呼叫 [handlers]。
+/// 契約見網頁端套件的 `AqutterSqliteDialect` 與 `README.md`：
+/// BLOB 直接以二進位（`Uint8List`）傳遞，每個資料庫一條序列化連線，同一資料庫的語句依收到順序執行。
 class SqliteDriftPlugin extends AqutterPlugin {
-  AqutterPluginContext? _context;
-  Timer? _timer;
-  int _count = 0;
+  SqliteDriftPlugin({SqliteDriftManager? manager}) : _manager = manager ?? SqliteDriftManager();
+
+  final SqliteDriftManager _manager;
 
   @override
   String get id => 'sqlite';
 
   @override
   Map<String, AqutterPluginHandler> get handlers => {
-        'ping': (payload) async => {'echo': payload['message'] ?? ''},
+        'open': (payload) async {
+          await _manager.open(
+            name: payload['name'] as String?,
+            path: payload['path'] as String?,
+          );
+          return {'ok': true};
+        },
+        'exec': (payload) async {
+          final name = payload['name'] as String;
+          final sql = payload['sql'] as String;
+          final bind = (payload['bind'] as List<dynamic>?) ?? const [];
+          return _manager.exec(name, sql, bind);
+        },
       };
 
   @override
-  void attach(AqutterPluginContext context) {
-    _context = context;
-    // 範例事件：每秒對網頁派送一次 tick。實際 plugin 請改成自己的事件來源。
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _count += 1;
-      _context?.emit('tick', {'count': _count});
-    });
-  }
-
-  @override
-  Widget? buildOverlay(BuildContext context) => null;
-
-  @override
   void dispose() {
-    _timer?.cancel();
-    _timer = null;
-    _context = null;
+    _manager.closeAll();
   }
 }

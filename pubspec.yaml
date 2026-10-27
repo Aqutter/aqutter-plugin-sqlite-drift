@@ -1,5 +1,5 @@
 name: aqutter_plugin_sqlite_drift
-description: Aqutter plugin - sqlite.
+description: Aqutter plugin - SQLite via drift (raw SQL executor).
 publish_to: 'none'
 version: 0.0.0
 
@@ -22,8 +22,11 @@ dependencies:
       path: shell
       ref: 0.0.0
 
-  # When native capabilities are needed, add an existing Flutter plugin here (e.g. battery_plus);
-  # its native part is integrated automatically by the Flutter toolchain at app build time, no extra setup needed.
+  # Structured DB (raw SQL executor); native SQLite is built by sqlite3 3.x through Dart build hooks
+  drift: ^2.34.3
+  sqlite3: ^3.5.0
+  path: ^1.9.1
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

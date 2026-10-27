@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "id": "sqlite",
+  "dart": {
+    "package": "aqutter_plugin_sqlite_drift",
+    "class": "SqliteDriftPlugin"
+  }
+}

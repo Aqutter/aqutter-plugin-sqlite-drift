@@ -1,0 +1,31 @@
+name: aqutter_plugin_sqlite_drift
+description: Aqutter plugin - sqlite.
+publish_to: 'none'
+version: 0.0.0
+
+environment:
+  sdk: '>=3.13.7 <4.0.0'
+  # 3.47.8 is the reference Flutter version the framework is built and tested on.
+  # There is deliberately no upper bound: newer Flutter versions can be tried, and `aqutter doctor`
+  # warns when the installed Flutter is newer than the reference.
+  # `aqutter upgrade` keeps this line in sync with the installed CLI.
+  flutter: '>=3.47.8'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The app and the plugin must use the same shell version (same git ref), otherwise pub cannot resolve the dependencies.
+  aqutter:
+    git:
+      url: https://github.com/Aqutter/aqutter.git
+      path: shell
+      ref: 0.0.0
+
+  # When native capabilities are needed, add an existing Flutter plugin here (e.g. battery_plus);
+  # its native part is integrated automatically by the Flutter toolchain at app build time, no extra setup needed.
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

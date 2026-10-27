@@ -1,0 +1,32 @@
+{
+  "name": "aqutter-plugin-sqlite-drift",
+  "version": "0.0.0",
+  "description": "Aqutter plugin：sqlite",
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "lib",
+    "pubspec.yaml",
+    "aqutter-plugin.json",
+    "README.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@aqutter/aqutter": "*"
+  },
+  "peerDependenciesMeta": {
+    "@aqutter/aqutter": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@aqutter/aqutter": "github:Aqutter/aqutter-js#0.0.0",
+    "typescript": "^5.7.0"
+  }
+}

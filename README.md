@@ -43,6 +43,22 @@ const db = new Kysely<Database>({
 - 連線未開啟、SQL 錯誤：呼叫以 `HANDLER_FAILED` 失敗。
 - 型別見 `src/index.ts`（`SqliteOpenRequest`、`SqliteExecRequest`、`SqliteExecResponse`），並以 `AqutterPluginRegistry` 併入 `callPlugin('sqlite', …)`。
 
+## 實測
+
+用範本專案的暫存複本在實機跑 release 版：資料庫操作經 Kysely dialect，走統一傳輸。
+
+| 項目 | Android（ASUS_I006D） | Windows（桌機） |
+|---|---|---|
+| 建表、插入與查詢 | 通過 | 通過 |
+| BLOB 1MB 來回 | 存成真正的 `blob`（`typeof(payload)`），讀回是 `Uint8Array`，內容一致 | 同左 |
+| BLOB 1MB 寫入／讀回（各 20 次平均） | 11.1／8.3 ms | 24.6／21.1 ms |
+| 交易：commit 與 rollback | commit 留下、rollback 不留 | 同左 |
+| 同時送出 50 個 insert | 依序（`insertId` 連續），41.8 ms | 依序，478 ms |
+| 未開啟的資料庫 | `HANDLER_FAILED` | `HANDLER_FAILED` |
+
+- 各只跑一次；Linux、iOS、macOS 沒有量（iOS、macOS 與統一傳輸一起由使用者驗證，追蹤於 Aqutter/aqutter#21）。
+- Windows 的 50 個 insert 明顯比 Android 慢，每次呼叫的固定成本較高；沒有深入追查。
+
 ## 從殼的內建 `db_open`／`db_exec` 遷移
 
 這個 plugin 取代殼先前內建的資料庫 handler（已移除，沒有相容層）：
